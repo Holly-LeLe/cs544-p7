@@ -1,0 +1,28 @@
+FROM ubuntu:24.04
+
+# Install required packages
+RUN apt-get update && apt-get install -y \
+    wget \
+    curl \
+    openjdk-17-jdk \
+    python3-pip \
+    net-tools \
+    lsof \
+    nano \
+    sudo
+
+# Install Python dependencies
+RUN pip3 install jupyterlab==4.3.5 pandas==2.2.3 pyspark==4.1.1 matplotlib==3.10.1 google-genai==0.2.2 --break-system-packages
+
+# Download and extract Hadoop
+RUN wget https://dlcdn.apache.org/hadoop/common/hadoop-3.4.3/hadoop-3.4.3.tar.gz && \
+    tar -xf hadoop-3.4.3.tar.gz && \
+    rm hadoop-3.4.3.tar.gz
+
+# Create a symlink for java so that it is architecture agnostic
+RUN ln -s /usr/lib/jvm/java-17-openjdk-* /usr/lib/jvm/java-17-openjdk
+
+# Set environment variables
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+ENV PATH="${PATH}:/hadoop-3.4.3/bin"
+ENV HADOOP_HOME=/hadoop-3.4.3

@@ -1,0 +1,11 @@
+FROM mysql:8.4.0-oraclelinux8
+
+# Create an empty "stock_prices" table when the container starts
+RUN echo "CREATE TABLE IF NOT EXISTS stock_prices ( \
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, \
+  ticker TEXT, \
+  date DATE, \
+  price DOUBLE \
+  );" > /docker-entrypoint-initdb.d/init.sql
+
+CMD ["mysqld"]

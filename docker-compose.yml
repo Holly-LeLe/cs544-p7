@@ -1,0 +1,53 @@
+name: ${PROJECT}
+
+services:
+        kafka:
+                image: ${PROJECT}-kafka
+                container_name: ${PROJECT}-kafka
+                build:
+                        context: .
+                        dockerfile: Dockerfile.kafka
+                volumes:
+                        - ./src:/src
+                deploy:
+                        resources:
+                                limits:
+                                        memory: 3g
+                environment:
+                        - PROJECT=${PROJECT}
+
+        mysql:
+                image: ${PROJECT}-mysql
+                hostname: mysql
+                build:
+                        context: .
+                        dockerfile: Dockerfile.mysql
+                environment:
+                        MYSQL_ROOT_PASSWORD: abc
+                        MYSQL_DATABASE: CS544
+                deploy:
+                        resources:
+                                limits:
+                                        memory: 1g
+
+        nn:
+                image: ${PROJECT}-nn
+                hostname: boss
+                build:
+                        context: .
+                        dockerfile: Dockerfile.namenode
+                deploy:
+                        resources:
+                                limits:
+                                        memory: 1g
+
+        dn:
+                image: ${PROJECT}-dn
+                build:
+                        context: .
+                        dockerfile: Dockerfile.datanode
+                deploy:
+                        replicas: 3
+                        resources:
+                                limits:
+                                        memory: 1g

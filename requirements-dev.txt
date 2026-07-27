@@ -1,0 +1,1 @@
+autobadger @ git+https://gitlab:glpat-3UNXgs8sPC0AIs4gj9_55286MQp1OjVmdwk.01.0z1h6g2pj@git.doit.wisc.edu/cdis/cs/courses/cs544/tools/autobadger.git@master

@@ -1,0 +1,25 @@
+stages:
+  - submit
+
+submit_project:
+  stage: submit
+  before_script:
+    - apk add curl jq git
+  script:
+    - |
+      files=$(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA)
+      non_md_files=$(echo "$files" | grep -v -E "(\.md$)" || true)
+      if [ -z "$non_md_files" ]; then
+        echo "Only .md files were changed. Skipping submit job."
+        exit 0
+      else
+        echo "Found non-md files. Running submit job..."
+        echo "$files" # Optional: prints the list of all changed files
+      fi
+    - chmod +x submit.sh
+    - sh ./submit.sh
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_MESSAGE !~ /draft:/i'
+      when: always
+    - if: '$CI_COMMIT_BRANCH != "main"'
+      when: never
